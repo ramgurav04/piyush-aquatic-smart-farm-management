@@ -8,6 +8,39 @@
 
 Piyush Aquatic is a micro-entrepreneurial ornamental fish farming organization based in Dabhil, Taluka Khed, District Ratnagiri, Maharashtra. The organization manages approximately **200 glass and fiberglass tanks** and works with species such as **Discus, Angelfish, Arowana, Guppy, Ram Cichlid, and Plecostomus**.
 
+🏗️ Architecture & Authentication Flow
+The front-end architecture uses React Context API for global state management (AuthContext) to maintain user identity across page transitions.
+
+                  ┌────────────────────────┐
+                  │   User Enters Site     │
+                  └───────────┬────────────┘
+                              │
+                    ┌─────────┴─────────┐
+                    ▼                   ▼
+            Public Landing        /login Page
+                    │                   │
+                    │         Simulate Role Selection:
+                    │      [ADMIN] | [STAFF] | [CUSTOMER]
+                    │                   │
+                    └─────────┬─────────┘
+                              │
+                     ┌────────┴────────┐
+                     ▼                 ▼
+             CUSTOMER / GUEST       ADMIN / STAFF
+                    │                  │
+            Wholesale Catalog   ┌──────┴──────┐
+                                ▼             ▼
+                         ProtectedRoute ProtectedRoute
+                           (Role Check)  (Role Check)
+                                │             │
+                          ┌─────┴─────────────┴─────┐
+                          │    AdminLayout Shell    │
+                          │  (Sidebar + Navigation) │
+                          └───────────┬─────────────┘
+                                      │
+                              Dashboard Page
+                           (KPI Cards & Overview)
+
 This project provides a complete digital platform to manage:
 
 - Fish inventory

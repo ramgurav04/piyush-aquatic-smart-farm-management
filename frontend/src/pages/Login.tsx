@@ -1,58 +1,71 @@
-import { useAuth } from '../context/AuthContext'
-import { useNavigate, Link } from 'react-router-dom'
-import { Fish, ArrowLeft } from 'lucide-react'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import type { UserRole } from '../types/user';
+import { ShieldCheck, User, Store } from 'lucide-react';
 
-export function Login() {
-  const { login } = useAuth()
-  const navigate = useNavigate()
+export const Login: React.FC = () => {
+  const { loginAs } = useAuth();
+  const navigate = useNavigate();
 
-  const handleLogin = (role: 'admin' | 'staff' | 'customer') => {
-    login(role)
-    navigate(role === 'customer' ? '/' : '/admin')
-  }
+  const handleRoleSelect = (role: UserRole) => {
+    loginAs(role);
+    if (role === 'ADMIN' || role === 'STAFF') {
+      navigate('/admin');
+    } else {
+      navigate('/');
+    }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
-      <div className="bg-white p-8 rounded-2xl shadow-xl space-y-5 w-full max-w-md border border-slate-200">
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 space-y-6">
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 bg-gradient-to-tr from-cyan-600 to-blue-700 text-white rounded-xl flex items-center justify-center mx-auto shadow-md">
-            <Fish className="w-6 h-6" />
-          </div>
-          <h2 className="text-2xl font-extrabold text-slate-900">Piyush Aquatic Portal</h2>
-          <p className="text-xs text-slate-500">Select a demonstration role to access the portal</p>
+          <h1 className="text-2xl font-bold text-slate-900">Piyush Aquatic System</h1>
+          <p className="text-sm text-slate-500">Simulate role-based login to test system permissions</p>
         </div>
 
-        <div className="space-y-3 pt-2">
-          <button 
-            onClick={() => handleLogin('admin')} 
-            className="w-full flex items-center justify-between p-3.5 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition font-medium text-sm group"
+        <div className="space-y-3">
+          <button
+            onClick={() => handleRoleSelect('ADMIN')}
+            className="w-full flex items-center p-4 border border-slate-200 rounded-xl hover:border-cyan-500 hover:bg-cyan-50/50 transition-all text-left group"
           >
-            <span>Login as Administrator</span>
-            <span className="text-xs bg-slate-700 px-2 py-0.5 rounded font-mono group-hover:bg-cyan-600 transition">/admin</span>
+            <div className="p-3 bg-cyan-100 text-cyan-700 rounded-lg group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+              <ShieldCheck size={22} />
+            </div>
+            <div className="ml-4">
+              <h3 className="font-bold text-slate-800">Login as Administrator</h3>
+              <p className="text-xs text-slate-500">Full access to 200 tanks, breeding logs, & settings</p>
+            </div>
           </button>
-          <button 
-            onClick={() => handleLogin('staff')} 
-            className="w-full flex items-center justify-between p-3.5 bg-blue-700 text-white rounded-xl hover:bg-blue-600 transition font-medium text-sm group"
-          >
-            <span>Login as Facility Staff</span>
-            <span className="text-xs bg-blue-800 px-2 py-0.5 rounded font-mono group-hover:bg-blue-900 transition">/admin</span>
-          </button>
-          <button 
-            onClick={() => handleLogin('customer')} 
-            className="w-full flex items-center justify-between p-3.5 bg-cyan-700 text-white rounded-xl hover:bg-cyan-600 transition font-medium text-sm group"
-          >
-            <span>Login as Verified Retailer / Customer</span>
-            <span className="text-xs bg-cyan-800 px-2 py-0.5 rounded font-mono group-hover:bg-cyan-900 transition">/ (Wholesale)</span>
-          </button>
-        </div>
 
-        <div className="pt-3 border-t border-slate-100 text-center">
-          <Link to="/" className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-cyan-700 transition">
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Return to Wholesale Landing Page</span>
-          </Link>
+          <button
+            onClick={() => handleRoleSelect('STAFF')}
+            className="w-full flex items-center p-4 border border-slate-200 rounded-xl hover:border-indigo-500 hover:bg-indigo-50/50 transition-all text-left group"
+          >
+            <div className="p-3 bg-indigo-100 text-indigo-700 rounded-lg group-hover:bg-indigo-500 group-hover:text-white transition-colors">
+              <User size={22} />
+            </div>
+            <div className="ml-4">
+              <h3 className="font-bold text-slate-800">Login as Farm Staff</h3>
+              <p className="text-xs text-slate-500">Water parameters logging & daily feeding tasks</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => handleRoleSelect('CUSTOMER')}
+            className="w-full flex items-center p-4 border border-slate-200 rounded-xl hover:border-emerald-500 hover:bg-emerald-50/50 transition-all text-left group"
+          >
+            <div className="p-3 bg-emerald-100 text-emerald-700 rounded-lg group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+              <Store size={22} />
+            </div>
+            <div className="ml-4">
+              <h3 className="font-bold text-slate-800">Login as B2B Wholesale Buyer</h3>
+              <p className="text-xs text-slate-500">Browse species catalog, check MOQs, & order</p>
+            </div>
+          </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

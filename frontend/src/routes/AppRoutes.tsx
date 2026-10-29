@@ -1,30 +1,29 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
-import { Landing } from '../pages/Landing'
-import { Login } from '../pages/Login'
-import { Dashboard } from '../pages/Dashboard'
-import { AdminLayout } from '../layouts/AdminLayout'
-import { ProtectedRoute } from './ProtectedRoute'
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Landing } from '../pages/Landing';
+import { Login } from '../pages/Login';
+import { Dashboard } from '../pages/Dashboard';
+import { AdminLayout } from '../layouts/AdminLayout';
+import { ProtectedRoute } from './ProtectedRoute';
 
-export function AppRoutes() {
+export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Public Landing Page */}
+      {/* Public Routes */}
       <Route path="/" element={<Landing />} />
-
-      {/* Auth */}
       <Route path="/login" element={<Login />} />
-      
-      {/* Admin Routes */}
-      <Route element={<ProtectedRoute allowedRoles={['admin', 'staff']} />}>
-        <Route element={<AdminLayout />}>
-          <Route path="/admin" element={<Dashboard />} />
-          <Route path="/admin/species" element={<div>Species Module Coming Soon</div>} />
-          <Route path="/admin/tanks" element={<div>Tanks Module Coming Soon</div>} />
+
+      {/* Protected Admin/Staff Routes */}
+      <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'STAFF']} />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="species" element={<div className="p-4 font-bold text-lg">Species Management Module</div>} />
+          <Route path="tanks" element={<div className="p-4 font-bold text-lg">200 Tanks Matrix & Water Logs</div>} />
         </Route>
       </Route>
 
-      {/* Fallback */}
+      {/* Unknown Path Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-  )
-}
+  );
+};

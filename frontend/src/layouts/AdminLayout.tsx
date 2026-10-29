@@ -1,63 +1,96 @@
-import { Outlet, Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import { Globe, LayoutDashboard, Fish, Layers, LogOut } from 'lucide-react'
+import React from 'react';
+import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { Fish, Layers, LayoutDashboard, LogOut, UserCheck } from 'lucide-react';
 
-export function AdminLayout() {
-  const { logout } = useAuth()
-  const navigate = useNavigate()
+export const AdminLayout: React.FC = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
+    logout();
+    navigate('/login');
+  };
+
+  const navItems = [
+    { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
+    { label: 'Species Catalog', path: '/admin/species', icon: Fish },
+    { label: 'Tank Management (200)', path: '/admin/tanks', icon: Layers },
+  ];
 
   return (
-    <div className="flex h-screen bg-slate-100 text-slate-800">
-      <aside className="w-64 bg-slate-900 text-white flex flex-col">
-        <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-          <div className="text-lg font-bold tracking-tight">Piyush Aquatic</div>
-          <span className="text-[10px] bg-cyan-900 text-cyan-300 px-2 py-0.5 rounded font-mono">ADMIN</span>
-        </div>
-        <nav className="flex-1 p-4 space-y-1 text-sm font-medium">
-          <Link to="/admin" className="flex items-center gap-2.5 p-2.5 hover:bg-slate-800 rounded-lg text-slate-200 hover:text-white transition">
-            <LayoutDashboard className="w-4 h-4 text-cyan-400" />
-            <span>Dashboard</span>
-          </Link>
-          <Link to="/admin/species" className="flex items-center gap-2.5 p-2.5 hover:bg-slate-800 rounded-lg text-slate-300 hover:text-white transition">
-            <Fish className="w-4 h-4 text-cyan-400" />
-            <span>Species</span>
-          </Link>
-          <Link to="/admin/tanks" className="flex items-center gap-2.5 p-2.5 hover:bg-slate-800 rounded-lg text-slate-300 hover:text-white transition">
-            <Layers className="w-4 h-4 text-cyan-400" />
-            <span>Tanks</span>
-          </Link>
-          
-          <div className="pt-4 border-t border-slate-800 mt-4">
-            <Link to="/" className="flex items-center gap-2.5 p-2.5 hover:bg-slate-800 rounded-lg text-cyan-300 hover:text-cyan-200 transition">
-              <Globe className="w-4 h-4" />
-              <span>Public Landing Page</span>
-            </Link>
+    <div className="flex h-screen bg-slate-100 font-sans text-slate-800">
+      {/* Sidebar */}
+      <aside className="w-64 bg-slate-900 text-white flex flex-col justify-between">
+        <div>
+          <div className="p-5 border-b border-slate-800 flex items-center gap-3">
+            <div className="bg-cyan-500 p-2 rounded-lg text-slate-950 font-bold">PA</div>
+            <div>
+              <h1 className="font-bold text-lg leading-tight">Piyush Aquatic</h1>
+              <span className="text-xs text-cyan-400">Smart Farm System</span>
+            </div>
           </div>
-        </nav>
+
+          <nav className="p-4 space-y-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'bg-cyan-600 text-white'
+                      : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                  }`}
+                >
+                  <Icon size={18} />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* User Info & Logout */}
         <div className="p-4 border-t border-slate-800">
-          <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg text-xs font-semibold transition">
-            <LogOut className="w-3.5 h-3.5" />
-            <span>Logout</span>
+          <div className="flex items-center gap-3 mb-3 px-2">
+            <div className="bg-slate-700 p-2 rounded-full text-slate-300">
+              <UserCheck size={18} />
+            </div>
+            <div className="overflow-hidden">
+              <p className="text-sm font-medium truncate">{user?.name}</p>
+              <p className="text-xs text-slate-400 font-mono">{user?.role}</p>
+            </div>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-all"
+          >
+            <LogOut size={16} />
+            Sign Out
           </button>
         </div>
       </aside>
-      <main className="flex-1 flex flex-col overflow-hidden">
-        <header className="bg-white p-4 shadow-sm border-b border-slate-200 flex justify-between items-center">
-          <div className="font-semibold text-sm text-slate-700">Piyush Aquatic Operations Management</div>
-          <Link to="/" className="text-xs font-semibold text-cyan-700 hover:underline flex items-center gap-1">
-            <Globe className="w-3.5 h-3.5" />
-            <span>View Public Storefront</span>
-          </Link>
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Top Header */}
+        <header className="bg-white border-b border-slate-200 px-8 py-4 flex justify-between items-center">
+          <h2 className="text-xl font-bold text-slate-800">Management Operations Hub</h2>
+          <div className="flex items-center gap-2 text-xs bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-200">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            200 Tanks Online
+          </div>
         </header>
-        <div className="p-6 overflow-auto flex-1">
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-y-auto p-8">
           <Outlet />
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
-  )
-}
+  );
+};

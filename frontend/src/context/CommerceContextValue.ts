@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { CartItem, CustomerOrder, OrderStatus } from '../types/order';
+import type { CartItem, CustomerOrder, OrderStatus } from '@/domain/orders/order';
 
 export interface CommerceContextType {
   cart: CartItem[];

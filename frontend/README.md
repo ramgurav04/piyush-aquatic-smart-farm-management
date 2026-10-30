@@ -1,136 +1,47 @@
-# Piyush Aquatic – Smart Ornamental Fish Farm Management and Wholesale E-Commerce System
+# Piyush Aquatic frontend
 
-> Semester 6 full implementation of the project **“IT Support for Self-Help Groups and Micro-Entrepreneurs”** for **Piyush Aquatic**, an ornamental fish farming and wholesale business.
+React, TypeScript, Vite, Tailwind CSS 4 and React Router frontend for the Piyush Aquatic ornamental fish farm demo. All records and account data are browser-local mock data; there is no connected backend, real inventory, payment, or order submission.
 
----
+## Run locally
 
-## 📌 Overview
+```powershell
+cd frontend
+npm ci
+npm run dev
+```
 
-Piyush Aquatic is a micro-entrepreneurial ornamental fish farming organization based in Dabhil, Taluka Khed, District Ratnagiri, Maharashtra. The organization manages approximately **200 glass and fiberglass tanks** and works with species such as **Discus, Angelfish, Arowana, Guppy, Ram Cichlid, and Plecostomus**.
+Run `npm run build` for TypeScript and production-build checks, and `npm run lint` for Oxlint.
 
-This project provides a complete digital platform to manage:
+## Deploy to Vercel
 
-- Fish inventory
-- Breeding pairs and breeding records
-- Young fish / fry rearing
-- Tank information
-- Water quality parameters
-- Feeding and health records
-- Maintenance activities
-- Wholesale customers and orders
-- Reports and analytics
+1. Push this branch to GitHub and import the repository in Vercel.
+2. Set **Root Directory** to `frontend` (the Vite app is in this subfolder).
+3. Keep the framework preset as **Vite**. Use `npm ci` for install, `npm run build` for build, and `dist` for output.
+4. Deploy. `vercel.json` includes the SPA rewrite so direct URLs such as `/catalog` and `/customer/orders` work after refresh.
 
-The system is designed as a production-grade full-stack application using **Java Spring Boot**, **React**, **PostgreSQL**, **JWT authentication**, **Docker**, and **CI/CD**.
+No environment variables are required for the frontend demo. Its demo credentials are public in the client bundle, and browser-local accounts, carts, and enquiries are not shared across devices or users. Deploy this only as a demonstration; it has no secure authentication or backend.
 
----
+## Demo sign-ins
 
-## ✨ Features
+| Account | Entry point | Email | Password |
+|---|---|---|---|
+| Individual customer | `/login` | `individual@piyushaquatic.com` | `CustomerDemo123!` |
+| Business customer | `/login` | `business@piyushaquatic.com` | `CustomerDemo123!` |
+| Administrator | `/management/admin/login` | `admin@piyushaquatic.com` | `AdminDemo123!` |
+| Farm staff | `/management/staff/login` | `staff@piyushaquatic.com` | `StaffDemo123!` |
 
-### 🐟 Fish Inventory Management
-- Species management
-- Available quantity
-- Male / female count
-- Age and size
-- Price
-- Batch / lot tracking
-- QR code generation for tanks or batches
+At `/login`, choose Individual or Business. That choice must match the customer account; it does not set or grant a role. Public registration creates customer accounts only. Internal accounts use the separate `/management/login` chooser and role-specific sign-in pages. The demo credentials and all role checks are client-side and are not secure authentication; production authorization must be enforced by the Spring Boot API.
 
-### 🧬 Breeding Management
-- Breeding pairs
-- Breeding dates
-- Spawning observations
-- Egg / fry information
-- Rearing records
-- Genetic lineage tracking
-- Breeding success analytics
+## Frontend structure
 
-### 🏊 Tank Management
-- Tank number and capacity
-- Fish assigned to tank
-- Tank status
-- Maintenance schedule
-- Maintenance history
+- `src/context/AuthContext.tsx`: mock customer registration, demo sign-in and browser session restoration.
+- `src/context/CommerceContext.tsx`: browser-local demo enquiry cart and history.
+- `src/mocks/fish.ts`: typed sample fish catalog; availability and price are enquiry-only labels.
+- `src/pages` and `src/layouts`: public landing/catalog, customer portal, administrator workspace and restricted staff workspace.
+- `src/routes`: role-protected customer, administrator and staff routes.
 
-### 💧 Water Quality & Health
-- Temperature
-- pH
-- Ammonia
-- Nitrite
-- Nitrate
-- Dissolved oxygen
-- Health observations
-- Treatment logs
-- Automated alerts for out-of-range values
+Customer credentials created through registration are stored as salted browser-side SHA-256 digests, not plaintext passwords. This is a demonstration convenience, not a production password storage strategy. Browser-local data can be modified or cleared by the user.
 
-### 🍽️ Feeding & Maintenance
-- Feeding schedules
-- Feeding records
-- Tank cleaning logs
-- Filter maintenance
-- Hygiene activities
+## Spring Boot integration
 
-### 🛒 Wholesale E-Commerce
-- Fish catalogue
-- Product / fish details
-- Wholesale pricing
-- Minimum order quantity (MOQ)
-- Customer registration
-- Cart and order management
-- Order status tracking
-- Invoice / order records
-- Tiered pricing
-- Credit management for B2B customers
-
-### 👥 Customer Management
-- Wholesale customer profiles
-- Contact information
-- Previous orders
-- Purchase history
-- Customer segmentation
-- Interaction logs
-
-### 📊 Admin Dashboard & Reports
-- Fish inventory overview
-- Orders overview
-- Customers overview
-- Breeding records
-- Sales reports
-- Stock reports
-- Water quality trends
-- Exportable reports — CSV / PDF
-- Audit logs
-
----
-
-
-
-## 📄 License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
-
----
-
-## 👤 Author
-
-**Ram Prakash Gurav**   
-TY B.Sc. Information Technology (NEP)  
-Project Guide: **Miss Sai Surve**  
-Organization: **Piyush Aquatic**  
-Location: Dabhil, Taluka Khed, District Ratnagiri, Maharashtra
-
----
-
-## 🙏 Acknowledgements
-
-- Piyush Aquatic team
-- Project Guide — Miss Sai Surve
-- Faculty members and participants
-- N.E. Society’s D.B.J. College (Autonomous), Chiplun
-- FAO aquaculture reference materials
-- Open-source Java, Spring, React, and PostgreSQL communities
-
----
-
-## ⭐ Support
-
-If you find this project useful, please give it a star on GitHub.
+Replace the context and mock data access with API services for registration, authentication, customer profiles, catalog availability, and orders. Keep the public signup contract restricted to customer account types; the server must assign and enforce `CUSTOMER`, `ADMIN`, and `STAFF` permissions. Implement password recovery, secure session/token handling, order confirmation, real availability and pricing, and server-side validation before production use.

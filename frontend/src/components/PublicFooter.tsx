@@ -21,6 +21,7 @@ export const PublicFooter: React.FC = () => (
         <a href="/#collection">Fish collection</a>
         <a href="/#about">Our farm</a>
         <a href="/login">Customer login</a>
+        <a href='/management/login'>Management</a>
       </div>
     </div>
     <div className="footer-bottom">© {currentYear} Piyush Aquatic · Demo frontend, not connected to a live ordering system.</div>
